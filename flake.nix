@@ -4,6 +4,9 @@
   # Inputs: External dependencies this flake uses (other flakes, repos, etc.)
   inputs = {
     # nixpkgs: The main Nix package repository, using unstable branch for latest packages
+    # Why unstable? Development environments benefit from latest packages/features.
+    # Alternative: "github:NixOS/nixpkgs/nixos-25.05" for stable releases
+    # Mixed approach: Use multiple inputs for different stability needs
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # nix-darwin: Provides macOS system configuration capabilities (like NixOS but for macOS)
@@ -20,6 +23,29 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
+
+  # Why nixpkgs-unstable vs stable?
+  #
+  # nixpkgs-unstable:
+  # ✅ Latest packages and features
+  # ✅ Better for development environments
+  # ✅ Faster security updates
+  # ❌ Occasional breakage
+  # ❌ More frequent rebuilds
+  #
+  # nixpkgs stable (24.11):
+  # ✅ Rock solid, thoroughly tested
+  # ✅ Predictable, fewer surprises
+  # ✅ Good for production servers
+  # ❌ Older package versions
+  # ❌ Slower security patches
+  #
+  # Mixed approach example:
+  # inputs = {
+  #   nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  #   nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
+  # };
+  # Then use stable for critical packages, unstable for dev tools
 
   # Outputs: What this flake produces/exposes (configurations, packages, etc.)
   outputs =
@@ -125,21 +151,21 @@
         default = mkDarwinSystem {
           # builtins.currentSystem auto-detects your Mac's architecture
           system = builtins.currentSystem;
-          username = "your-username";
+          username = "tien-duy.nguyen";
         };
 
         # ARM64 macOS configuration (Apple Silicon Macs)
         # Usage: darwin-rebuild switch --flake .#aarch64-darwin
         aarch64-darwin = mkDarwinSystem {
           system = "aarch64-darwin";
-          username = "your-username";
+          username = "tien-duy.nguyen";
         };
 
         # Intel macOS configuration (Intel Macs)
         # Usage: darwin-rebuild switch --flake .#x86_64-darwin
         x86_64-darwin = mkDarwinSystem {
           system = "x86_64-darwin";
-          username = "your-username";
+          username = "tien-duy.nguyen";
         };
       };
 
@@ -149,14 +175,14 @@
         # Usage: home-manager switch --flake .#aarch64-linux
         aarch64-linux = mkHomeConfiguration {
           system = "aarch64-linux";
-          username = "your-username";
+          username = "tien-duy.nguyen";
         };
 
         # Linux x86_64/AMD64 configuration (most Linux desktops/servers)
         # Usage: home-manager switch --flake .#x86_64-linux
         x86_64-linux = mkHomeConfiguration {
           system = "x86_64-linux";
-          username = "your-username";
+          username = "tien-duy.nguyen";
         };
       };
     };
